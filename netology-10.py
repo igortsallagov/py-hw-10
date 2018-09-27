@@ -9,7 +9,6 @@ class User:
 
     def __init__(self, vk_id):
         self.vk_id = vk_id
-        self.domain = None
 
     def get_name(self):
         params_name = dict(access_token=TOKEN, user_ids=self.vk_id, v=VERSION)

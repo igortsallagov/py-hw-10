@@ -28,7 +28,7 @@ class User:
         params_mutual = dict(access_token=TOKEN, source_uid=self.vk_id, target_uid=vk_id_2, v=VERSION)
         mutual_friends_response = requests.get('https://api.vk.com/method/friends.getMutual', params_mutual).text
         mutual_friends_list = json.loads(mutual_friends_response)['response']
-        mutual_friends_as_users = [User(item) for item in self.mutual_friends_list]
+        mutual_friends_as_users = [User(item) for item in mutual_friends_list]
         return mutual_friends_as_users
 
     # метод __and__ дает аналогичный результат

@@ -27,7 +27,7 @@ class User:
         self.vk_id_2 = vk_id_2
         params_mutual = dict(access_token=TOKEN, source_uid=self.vk_id, target_uid=vk_id_2, v=VERSION)
         mutual_friends_response = requests.get('https://api.vk.com/method/friends.getMutual', params_mutual).text
-        self.mutual_friends_list = json.loads(mutual_friends_response)['response']
+        mutual_friends_list = json.loads(mutual_friends_response)['response']
         mutual_friends_as_users = [User(item) for item in self.mutual_friends_list]
         return mutual_friends_as_users
 

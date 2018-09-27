@@ -35,7 +35,7 @@ class User:
 
     def __and__(self, other):
         params_and_self = dict(access_token=TOKEN, user_id=self.vk_id, v=VERSION)
-        params_and_other = dict(access_token=TOKEN, user_id=other, v=VERSION)
+        params_and_other = dict(access_token=TOKEN, user_id=other.vk_id, v=VERSION)
         friends_self_response = requests.get('https://api.vk.com/method/friends.get', params_and_self).text
         friends_other_response = requests.get('https://api.vk.com/method/friends.get', params_and_other).text
         friends_self_set = set(json.loads(friends_self_response)['response']['items'])

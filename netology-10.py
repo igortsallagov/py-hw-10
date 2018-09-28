@@ -10,6 +10,20 @@ class User:
     def __init__(self, vk_id):
         self.vk_id = vk_id
 
+    def __str__(self):
+        return f'https://vk.com/id{self.vk_id}'
+
+    def __and__(self, other):
+        params_and_self = dict(access_token=TOKEN, user_id=self.vk_id, v=VERSION)
+        params_and_other = dict(access_token=TOKEN, user_id=other.vk_id, v=VERSION)
+        friends_self_response = requests.get('https://api.vk.com/method/friends.get', params_and_self).text
+        friends_other_response = requests.get('https://api.vk.com/method/friends.get', params_and_other).text
+        friends_self_set = set(json.loads(friends_self_response)['response']['items'])
+        friends_other_set = set(json.loads(friends_other_response)['response']['items'])
+        mutual_friends = friends_self_set & friends_other_set
+        mutual_friends_as_users = [User(item) for item in mutual_friends]
+        return mutual_friends_as_users
+
     def get_name(self):
         params_name = dict(access_token=TOKEN, user_ids=self.vk_id, v=VERSION)
         get_name_response = requests.get('https://api.vk.com/method/users.get', params_name)
@@ -23,26 +37,19 @@ class User:
         self.domain = get_name_response.json()['response'][0]['domain']
         return self.domain
 
-    def mutual_friends(self, vk_id_2):
-        self.vk_id_2 = vk_id_2
-        params_mutual = dict(access_token=TOKEN, source_uid=self.vk_id, target_uid=vk_id_2, v=VERSION)
-        mutual_friends_response = requests.get('https://api.vk.com/method/friends.getMutual', params_mutual).text
-        mutual_friends_list = json.loads(mutual_friends_response)['response']
-        mutual_friends_as_users = [User(item) for item in mutual_friends_list]
-        return mutual_friends_as_users
-
-    # метод __and__ дает аналогичный результат
-
-    def __and__(self, other):
-        params_and_self = dict(access_token=TOKEN, user_id=self.vk_id, v=VERSION)
-        params_and_other = dict(access_token=TOKEN, user_id=other.vk_id, v=VERSION)
-        friends_self_response = requests.get('https://api.vk.com/method/friends.get', params_and_self).text
-        friends_other_response = requests.get('https://api.vk.com/method/friends.get', params_and_other).text
-        friends_self_set = set(json.loads(friends_self_response)['response']['items'])
-        friends_other_set = set(json.loads(friends_other_response)['response']['items'])
-        mutual_friends = friends_self_set & friends_other_set
-        mutual_friends_as_users = [User(item) for item in mutual_friends]
-        return mutual_friends_as_users
-
     def get_link(self):
         return f'https://vk.com/id{self.vk_id}'
+
+
+def core():
+    vk_id_1 = int(input('Введите первый ID: '))
+    vk_id_2 = input(('Введите второй ID: '))
+    user_1 = User(vk_id_1)
+    user_2 = User(vk_id_2)
+    mutual_friends_list = user_1 & user_2
+    for item in mutual_friends_list:
+        print(item)
+
+
+if __name__ == '__main__':
+    core()

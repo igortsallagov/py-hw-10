@@ -47,8 +47,12 @@ def core():
     user_1 = User(vk_id_1)
     user_2 = User(vk_id_2)
     mutual_friends_list = user_1 & user_2
-    for item in mutual_friends_list:
-        print(item)
+    if len(mutual_friends_list) > 0:
+        print(f'Количество общих друзей пользователей: {len(mutual_friends_list)}')
+        for item in mutual_friends_list:
+            print(item)
+    else:
+        print(f'У пользователей с ID {vk_id_1} и {vk_id_2} нет общих друзей.')
 
 
 if __name__ == '__main__':
